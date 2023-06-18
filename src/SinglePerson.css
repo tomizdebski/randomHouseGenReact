@@ -1,0 +1,8 @@
+.home{
+    box-shadow: 2px 2px 10px 2px rgb(117, 115, 115);
+    margin: 20px;
+    border-radius: 10px;
+}
+.home__img{
+    border-radius: 5px 5px 0 0;
+}
