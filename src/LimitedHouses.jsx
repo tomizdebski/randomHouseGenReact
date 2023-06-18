@@ -1,55 +1,68 @@
 import './LimitedHouses.css';
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import faker from 'faker'
+import SinglePerson from './SinglePerson';
 import './App.css';
 
-function LimitedHouses() {
-    
-  const [pagination, setPagination] = useState({
-    data: new Array(1000).fill().map((value, index) => (({
-      id: index,
-      title: faker.lorem.words(5),
-      body: faker.lorem.sentences(8)
-    }))),
-    offset: 0,
-    numberPerPage: 10,
-    pageCount: 0,
-    currentData: []
-  });
-  useEffect(() => {
-    setPagination((prevState) => ({
-      ...prevState,
-      pageCount: prevState.data.length / prevState.numberPerPage,
-      currentData: prevState.data.slice(pagination.offset, pagination.offset + pagination.numberPerPage)
-    }))
-  }, [pagination.numberPerPage, pagination.offset])
-  const handlePageClick = event => {
-    const selected = event.selected;
-    const offset = selected * pagination.numberPerPage
-    setPagination({ ...pagination, offset })
-  }
+function LimitedHouses(props) {
+
+    const { dane } = props;
+    const itemsPerPage = 10;
+  
+  const [itemOffset, setItemOffset] = useState(0);
+  
+  const endOffset = itemOffset + itemsPerPage;
+  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  const currentItems = dane.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(dane.length / itemsPerPage);
+
+
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % dane.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
+  const html = () => currentItems.map(el => <SinglePerson house={el}/>);
+
   return (
-    <div>
-      {pagination.currentData && pagination.currentData.map(((item, index) => (
-        <div key={item.id} className="post">
-          <h3>{`${item.title} - ${item.id}`}</h3>
-          <p>{item.body}</p>
-        </div>
-      )))
-      }
+    <>
+      {html()}
+
+      <div className="containerPagination"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        padding: 40,
+        boxSizing: 'border-box',
+        width: '100%',
+        height: '100%',
+      }}
+    >
       <ReactPaginate
-        previousLabel={'previous'}
-        nextLabel={'next'}
-        breakLabel={'...'}
-        pageCount={pagination.pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageClick}
+        activeClassName={'item active '}
+        breakClassName={'item break-me '}
+        breakLabel="..."
         containerClassName={'pagination'}
-        activeClassName={'active'}
+        disabledClassName={'disabled-page'}
+        marginPagesDisplayed={2}
+        nextClassName={"item next "}
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageClassName={'item pagination-page '}
+        pageRangeDisplayed={5}
+        pageCount={pageCount}
+        previousClassName={"item previous"}
+        previousLabel="< previous"
+        renderOnZeroPageCount={null}
       />
-    </div>
+      </div>
+    </>
   );
-}
-export default App;
+};
+
+export default LimitedHouses;

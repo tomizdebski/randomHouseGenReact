@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { generateHouse, createArray } from './data';
 import SinglePerson from './SinglePerson';
+import LimitedHouses from './LimitedHouses';
 import './App.css';
 
 
@@ -27,13 +28,15 @@ function App() {
                             <h1>LOADING...</h1>
                         </div>;
 
-  const html = data.map(el => <SinglePerson house={el}/>);
+  const html = () => data.map(el => <SinglePerson house={el}/>);  //all houses
+  const htmlPaginate = () => <LimitedHouses dane={data}/>;
   
   
 
   return (
     <div className="App">
-        {data.length > 1?html:htmlLoading}
+        {data.length > 1?htmlPaginate():htmlLoading}
+        
     </div>
   );
 }
