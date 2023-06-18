@@ -44,7 +44,7 @@ const generateHouse = ()=> {
 
 async function createArray() {
     let arrayHome = [];
-    for (let index = 0; index < 51; index++) {
+    for (let index = 0; index < 50; index++) {
         const response = await generateHouse();
         arrayHome.push(response);
     }
